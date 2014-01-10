@@ -271,7 +271,10 @@ var jqyoui = angular.module('ngDragDrop', []).service('ngDragDropService', ['$ti
               .draggable({
                 start: function(event, ui) {
                   zIndex = angular.element(jqyouiOptions.helper ? ui.helper : this).css('z-index');
-                  angular.element(jqyouiOptions.helper ? ui.helper : this).css('z-index', 9999);
+                  angular.element(jqyouiOptions.helper ? ui.helper : this).css({
+                    'z-index': 9999,
+                    'min-width': '400px'
+                  });
                   jqyoui.startXY = angular.element(this).offset();
                   ngDragDropService.callEventCallback(scope, dragSettings.onStart, event, ui);
                 },
