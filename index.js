@@ -306,18 +306,20 @@ var jqyoui = angular.module('ngDragDrop', []).service('ngDragDropService', ['$ti
         var dropSettings;
         var updateDroppable = function(newValue, oldValue) {
           if (newValue) {
-            dropSettings = scope.$eval(angular.element(this).attr('jqyoui-droppable') || angular.element(this).attr('data-jqyoui-droppable')) || {};
             element
               .droppable({disabled: false})
               .droppable(scope.$eval(attrs.jqyouiOptions) || {})
               .droppable({
                 over: function(event, ui) {
+                  dropSettings = dropSettings || getDropSettings(this);
                   ngDragDropService.callEventCallback(scope, dropSettings.onOver, event, ui);
                 },
                 out: function(event, ui) {
+                  dropSettings = dropSettings || getDropSettings(this);
                   ngDragDropService.callEventCallback(scope, dropSettings.onOut, event, ui);
                 },
                 drop: function(event, ui) {
+                  dropSettings = dropSettings || getDropSettings(this);
                   if (angular.element(ui.draggable).ngattr('ng-model') && attrs.ngModel) {
                     ngDragDropService.invokeDrop(angular.element(ui.draggable), angular.element(this), event, ui);
                   } else {
@@ -329,6 +331,10 @@ var jqyoui = angular.module('ngDragDrop', []).service('ngDragDropService', ['$ti
             element.droppable({disabled: true});
           }
         };
+
+        function getDropSettings(el) {
+          return (scope.$eval(angular.element(el).attr('jqyoui-droppable') || angular.element(el).attr('data-jqyoui-droppable')) || {});
+        }
 
         scope.$watch(function() { return scope.$eval(attrs.drop); }, updateDroppable);
         updateDroppable();
