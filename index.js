@@ -96,6 +96,10 @@ var jqyoui = angular.module('ngDragDrop', []).service('ngDragDropService', ['$ti
       $droppableDraggable = $droppable.find('[jqyoui-draggable]:last,[data-jqyoui-draggable]:last');
       dropSettings = droppableScope.$eval($droppable.attr('jqyoui-droppable') || $droppable.attr('data-jqyoui-droppable')) || [];
       dragSettings = draggableScope.$eval($draggable.attr('jqyoui-draggable') || $draggable.attr('data-jqyoui-draggable')) || [];
+      if(dropSettings.testDrop && !droppableScope[dropSettings.testDrop](draggableScope)) {
+        if (dropSettings.cancelDrop) droppableScope[dropSettings.cancelDrop](event);
+        return;
+      }
 
       // Helps pick up the right item
       dragSettings.index = this.fixIndex(draggableScope, dragSettings, dragModelValue);
