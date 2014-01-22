@@ -199,7 +199,13 @@ var jqyoui = angular.module('ngDragDrop', []).service('ngDragDropService', ['$ti
           dropModelValue[dropModelValue.length - 1]['jqyoui_pos'] = jqyoui_pos;
         }
       } else {
-        $parse(dropModel + ' = dndDragItem')(scope);
+        var expression;
+        // TODO
+        // kinda gross trick: very much special cased for Lafaro.
+        // if a key would ever be "_id" this would break.
+        if (dropModelValue._id) expression = dropModel + " = dndDragItem"
+        else expression = dropModel + "['" + dragItem._id + "'] = dndDragItem";
+        $parse(expression)(scope);
         if (dragSettings && dragSettings.placeholder === true) {
           dropModelValue['jqyoui_pos'] = jqyoui_pos;
         }
